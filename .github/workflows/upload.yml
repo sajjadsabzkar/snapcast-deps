@@ -16,16 +16,18 @@ jobs:
     - name: Install zip if not installed
       run: sudo apt update && sudo apt install zip -y
 
-    - name: Zip Android SDK
+    - name: Prepare ZIP
       run: |
-        cd /usr/local/lib/android/
-        zip -r android-sdk.zip sdk/
+        mkdir -p /home/runner/work/android-sdk
+        cp -r /usr/local/lib/android/* /home/runner/work/android-sdk/
+        cd /home/runner/work/
+        zip -r android-sdk.zip android-sdk/
 
     - name: Upload Android SDK Zip
       uses: actions/upload-artifact@v4
       with:
         name: android-sdk-zip
-        path: android-sdk.zip
+        path: /home/runner/work/*
 
     - name: Create Release
       id: create_release
@@ -34,4 +36,4 @@ jobs:
         tag: "sdk-2024"
         name: "android-sdk"
         body: 'body'
-        artifacts: /usr/local/lib/android/android-sdk.zip
+        artifacts: /home/runner/work/*
